@@ -3,33 +3,47 @@
 import { useRouter } from 'vue-router';
 import SpinnerOverlay from '@/components/SpinnerOverlay.vue';
 import IconSpinner from '@/components/icons/IconSpinner.vue';
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import axios from 'axios';
 
 const router = useRouter();
 
-const isLoading = ref(false);
-const showSection = ref(false);
-const showSuccess = ref(false);
+const userInfo = useUserStore();
 
+const iframeSrc = ref('http://localhost:8080/ui/verify/' + userInfo.code);
 
-setTimeout(() => {
-    showSection.value = true;
-}, 1000);
-
-const validateVerification = () => {
-    setTimeout(() => {
-        router.push('/dashboard/transfer-step-three');
-    }, 3000);
+const checkAndVerifyTransaction = async () => {
+    const payload = {
+        userId: userInfo.userEmail
+    }
+    try {
+        const response = await axios.post(`/example/api/transfer-verify`, payload);
+        if (response.status === 200) {
+            userInfo.setCode('');
+            router.push('/dashboard/transfer-step-three');
+        }
+    } catch (error: any) {
+        console.log(error)
+    }
 }
 
-const verify = () => {
-    isLoading.value = true
-    setTimeout(() => {
-        isLoading.value = false;
-        showSuccess.value = true;
-        validateVerification();
-    }, 2000);
+const receiveMessage = (event: any) => {
+    if (event.data == "transactionComplete") {
+        checkAndVerifyTransaction();
+    }
 }
+onMounted(() => {
+    window.addEventListener('message', receiveMessage);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('message', receiveMessage);
+});
+
+
+
+
 
 
 </script>
@@ -93,57 +107,12 @@ const verify = () => {
                     </div>
                 </div>
             </div>
-            <div v-if="!showSection" style="min-height: 200px; display: flex; align-items: center; justify-content: center;"
-                class="mt-12 ">
-                <SpinnerOverlay />
-            </div>
-            <div v-if="showSuccess" style="min-height: 200px; display: flex; align-items: center; justify-content: center;"
-                class="mt-12 ">
-                <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
-                    role="alert">
-                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                    </svg>
-                    <span class="sr-only">Info</span>
-                    <div>
-                        <span class="font-medium">Verification successful. Please wait processing transaction</span>
-                    </div>
-                </div>
+
+
+            <div class="w-full mt-12 mb-12 border-gray-300 dark:border-gray-300">
+                <iframe :src="iframeSrc" class="w-full" style="min-height: 600px;" />
             </div>
 
-            <div class="w-full mt-12 mb-12 border-gray-300 dark:border-gray-300" v-if="showSection && !showSuccess">
-                <div class="w-1/3 mx-auto flex flex-col justify-center items-center">
-                    <div>
-                        <h5 class="text-xl font-bold dark:text-white">Please authorize this Transaction</h5>
-                    </div>
-                    <div class="mt-4 dark:border-cyan-300 w-full">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter
-                            verification code</label>
-                        <input type="email" name="email" id="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="" required="true">
-                        <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">The
-                            authenticator code is generated every 30 seconds</p>
-                    </div>
-
-                    <button @click="verify" type="button"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center justify-center">
-                        <IconSpinner v-if="isLoading" />
-                        Verify PIN
-                    </button>
-
-
-                    <!-- <button type="button" class="w-1/2 mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Verify PIN</button> -->
-                </div>
-            </div>
-
-            <!-- <div class="mt-6">
-            <button @click="goToPage3" type="button"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">
-                Confirm Transaction</button> 
-
-        </div>-->
+        </div>
     </div>
-</div></template>
+</template>

@@ -3,31 +3,46 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import IconSpinner from '@/components/icons/IconSpinner.vue';
+import { useUserStore } from '@/stores/userStore';
+import axios from 'axios';
+
 const router = useRouter();
 const isLoading = ref(false);
+const userInfo = useUserStore();
 
-const goToPage2 = () => {
-    isLoading.value=true;
-    setTimeout(()=>{
-        router.push('/dashboard/transfer-step-two');
-    },3000)
-    
+
+
+
+const submitForm = async () => {
+    isLoading.value = true;
+    const payload = {
+        userId: userInfo.userEmail
+    }
+    try {
+        const response = await axios.post(`/example/api/transfer-start`, payload);
+        if (response.status === 200) {
+            userInfo.setCode(response.data.data.code);
+            router.push('/dashboard/transfer-step-two');
+        }
+        isLoading.value = false;
+
+    } catch (error: any) {
+        console.log(error)
+        isLoading.value = false;
+    }
 }
 </script>
 <template>
-    
-
-
     <div class="font-manrope flex h-screen w-full justify-center bg-gray-50 dark:bg-gray-900">
         <div class="mx-auto box-border w-full border bg-gray-50 dark:bg-gray-900 p-4">
             <div class="flex items-center justify-between">
-                <h3 class="text-4xl font-bold dark:text-white">Fund Transfer</h3>               
+                <h3 class="text-4xl font-bold dark:text-white">Fund Transfer</h3>
             </div>
 
             <div class="mt-6">
                 <div class="font-semibold text-[#64748B] dark:text-white">How much would you like to send?</div>
                 <div><input class="mt-1 w-full rounded-[4px] border border-[#A0ABBB] p-2" value="100.00" type="text"
-                        placeholder="100.00" disabled/></div>
+                        placeholder="100.00" disabled /></div>
 
             </div>
 
@@ -82,18 +97,19 @@ const goToPage2 = () => {
                 <div>
                     <span class="font-medium">Note!</span> Just press submit button to move forward
                 </div>
-        </div>
-        <div class="mt-6">
-            <button @click="goToPage2" type="button"
-              class="w-full text-white  bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 inline-flex items-center justify-center">
-              <IconSpinner v-if="isLoading" />
-              Initiate Transfer of $100
-            </button>
+            </div>
+            <div class="mt-6">
+                <button @click="submitForm" type="button"
+                    class="w-full text-white  bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 inline-flex items-center justify-center">
+                    <IconSpinner v-if="isLoading" />
+                    Initiate Transfer of $100
+                </button>
 
 
-            <!-- <button @click="goToPage2" type="button"
+                <!-- <button @click="goToPage2" type="button"
                 class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full">Initiate Transfer of $100</button> -->
 
+            </div>
         </div>
     </div>
-</div></template>
+</template>
