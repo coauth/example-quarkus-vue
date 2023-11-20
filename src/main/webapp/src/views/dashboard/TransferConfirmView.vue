@@ -11,7 +11,7 @@ const router = useRouter();
 
 const userInfo = useUserStore();
 
-const iframeSrc = ref('http://localhost:8080/ui/verify/' + userInfo.code);
+const iframeSrc = ref('/ui#/verify/' + userInfo.code);
 
 const checkAndVerifyTransaction = async () => {
     const payload = {

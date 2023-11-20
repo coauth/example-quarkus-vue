@@ -10,7 +10,7 @@ const router = useRouter();
 const userInfo = useUserStore();
 
 
-const iframeSrc = ref('http://localhost:8080/ui/register/' + userInfo.code);
+const iframeSrc = ref('/ui#/register/' + userInfo.code);
 
 
 const checkAndVerifyTransaction = async () => {
