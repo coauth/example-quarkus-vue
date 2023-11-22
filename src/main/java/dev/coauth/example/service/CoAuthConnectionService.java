@@ -2,8 +2,8 @@ package dev.coauth.example.service;
 
 import dev.coauth.example.dto.TotpRegisterRequestDto;
 import dev.coauth.example.dto.TotpRegisterResponseDto;
-import dev.coauth.example.dto.TotpVerifyGenerateRequestDto;
-import dev.coauth.example.dto.TotpVerifyRequestDto;
+import dev.coauth.example.dto.VerifyGenerateRequestDto;
+import dev.coauth.example.dto.VerifyRequestDto;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
@@ -20,14 +20,14 @@ public interface CoAuthConnectionService {
 
     @POST
     @Path("/register/status")
-    TotpRegisterResponseDto registerTotpStatus(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, TotpVerifyRequestDto totpVerifyRequestDto);
+    TotpRegisterResponseDto registerTotpStatus(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, VerifyRequestDto totpVerifyRequestDto);
 
     @POST
     @Path("/verify/generate")
-    TotpRegisterResponseDto verifyTotpGenerate(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, TotpVerifyGenerateRequestDto totpVerifyGenerateRequestDto);
+    TotpRegisterResponseDto verifyTotpGenerate(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, VerifyGenerateRequestDto totpVerifyGenerateRequestDto);
 
     @POST
     @Path("/verify/status")
-    TotpRegisterResponseDto verifyTotpStatus(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, TotpVerifyRequestDto totpVerifyRequestDto);
+    TotpRegisterResponseDto verifyTotpStatus(@HeaderParam("COAUTH-API-KEY") String coAuthApiKey, VerifyRequestDto totpVerifyRequestDto);
 
 }

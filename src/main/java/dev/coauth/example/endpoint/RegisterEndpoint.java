@@ -58,7 +58,7 @@ public class RegisterEndpoint {
 
         UserDbModel userDbModel=UserDatabase.dbBeanHashMap.get(exampleRegisterRequestDto.getUserId());
 
-        TotpVerifyRequestDto totpVerifyRequestDto=new TotpVerifyRequestDto();
+        VerifyRequestDto totpVerifyRequestDto=new VerifyRequestDto();
         totpVerifyRequestDto.setCodeVerifier(userDbModel.getCodeVerifier());
         totpVerifyRequestDto.setCode(userDbModel.getCurrentCode());
         TotpRegisterResponseDto totpRegisterResponseDto=coAuthConnectionService.registerTotpStatus(coAuthApiKey,totpVerifyRequestDto);

@@ -30,7 +30,7 @@ public class TransferVerificationEndpoint {
     @Path("/transfer-start")
     public GenericResponseDto verifyGenerate(ExampleRegisterRequestDto exampleRegisterRequestDto) {
 
-        TotpVerifyGenerateRequestDto totpVerifyGenerateRequestDto = new TotpVerifyGenerateRequestDto();
+        VerifyGenerateRequestDto totpVerifyGenerateRequestDto = new VerifyGenerateRequestDto();
         totpVerifyGenerateRequestDto.setUserId(exampleRegisterRequestDto.getUserId());
         totpVerifyGenerateRequestDto.setModules("TOTP");
 
@@ -55,7 +55,7 @@ public class TransferVerificationEndpoint {
     @Path("/transfer-verify")
     public GenericResponseDto verifyStatus(ExampleRegisterRequestDto exampleRegisterRequestDto) {
         UserDbModel userDbModel = UserDatabase.dbBeanHashMap.get(exampleRegisterRequestDto.getUserId());
-        TotpVerifyRequestDto totpVerifyRequestDto = new TotpVerifyRequestDto();
+        VerifyRequestDto totpVerifyRequestDto = new VerifyRequestDto();
         totpVerifyRequestDto.setCodeVerifier(userDbModel.getCodeVerifier());
         totpVerifyRequestDto.setCode(userDbModel.getCurrentCode());
         TotpRegisterResponseDto totpRegisterResponseDto = coAuthConnectionService.verifyTotpStatus(coAuthApiKey, totpVerifyRequestDto);
