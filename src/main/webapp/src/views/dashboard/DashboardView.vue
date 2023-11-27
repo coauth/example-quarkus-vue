@@ -40,8 +40,8 @@ const goToDeletePayee=()=>{
 
             <ul class="space-y-2 tracking-wide mt-8">
                 <li>
-                    <a href="#" aria-label="dashboard" @click="goToDashboard"
-                        class="relative px-4 py-3 flex items-center space-x-4 " :class="{
+                    <a aria-label="dashboard" @click="goToDashboard"
+                        class="cursor-pointer relative px-4 py-3 flex items-center space-x-4 " :class="{
                             'bg-gradient-to-r from-sky-600 to-cyan-400 text-white rounded-xl ':activeLink=='dashboard'
                         }">
                         <svg class="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
@@ -57,7 +57,7 @@ const goToDeletePayee=()=>{
                     </a>
                 </li>
                 <li>
-                    <a href="#" @click="goToTransfer" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group" :class="{
+                    <a @click="goToTransfer" class="cursor-pointer px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group" :class="{
                             'bg-gradient-to-r from-sky-600 to-cyan-400 text-white rounded-xl ' :activeLink=='transfer'
                         }">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -71,7 +71,7 @@ const goToDeletePayee=()=>{
                     </a>
                 </li>
                 <li>
-                    <a href="#" @click="goToDeletePayee" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"  :class="{
+                    <a @click="goToDeletePayee" class="cursor-pointer px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"  :class="{
                             'bg-gradient-to-r from-sky-600 to-cyan-400 text-white rounded-xl ' :activeLink=='deletePayee'
                         }">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
